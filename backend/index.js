@@ -1,17 +1,35 @@
 const { MongoClient } = require('mongodb');
+const express = require('express');
 
-// MongoDB URI and client setup
-const uri = 'mongodb://localhost:27017';
-const client = new MongoClient(uri);
+const app = express();
+const cors = require('cors');
+
+app.use(cors())
+app.use(express.json())
 
 
-client.connect();
+var db;
+const uri = "mongodb://127.0.0.1:27017/";
 
-const db = client.db('progig');
-const collection = db.collection('users');
+MongoClient.connect(uri).then((client)=>{
+    db = client.db('progig');
+    console.log("Database Connected");
+}
+).catch((err)=>{console.log("MongoDB Connection Error")});
 
-const result = db.collection('users').insertOne({
-    username : "Manoj",
-    email : "manoj@gmail.com",
-    password : "Manoj@1234"
+app.post("/loginUser", async(req, res) => {
+    const {email, password } = req.body;
+
+    const user = await db.collection('users').findOne({email});
+    if(!user){
+        return res.status(401).json({message: "User not found"});
+    }
+    else{
+        return res.status(401).json({message: "User found"});
+    }
 });
+
+
+app.listen(5000, ()=>{
+    console.log("Server running on Port 5000")
+})
