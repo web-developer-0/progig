@@ -1,0 +1,24 @@
+.about-container{
+    margin: 5% 10% 10% 10%;
+}
+
+.body-header, .body-content, .body-content-pt{
+    display: block;
+    margin-bottom: 8px;
+}
+
+.body-header{
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.body-content{
+    font-size: large;
+    text-indent: 4ch;
+    margin-bottom:20px;
+}
+
+.body-content-pt{
+    font-size: large;
+    margin-bottom: 30px;
+}

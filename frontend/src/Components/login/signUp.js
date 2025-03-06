@@ -2,7 +2,9 @@ import {React} from 'react';
 
 function signUp(){
     return(
-        <div></div>
+        <div className="">
+
+        </div>
     );
 }
 

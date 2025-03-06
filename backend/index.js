@@ -1,11 +1,12 @@
 const { MongoClient } = require('mongodb');
 const express = require('express');
+const bodyParser = require("body-parser");
 
 const app = express();
 const cors = require('cors');
 
 app.use(cors())
-app.use(express.json())
+app.use(bodyParser.json())
 
 
 var db;
@@ -20,13 +21,20 @@ MongoClient.connect(uri).then((client)=>{
 app.post("/loginUser", async(req, res) => {
     const {email, password } = req.body;
 
-    const user = await db.collection('users').findOne({email});
-    if(!user){
-        return res.status(401).json({message: "User not found"});
-    }
-    else{
-        return res.status(401).json({message: "User found"});
-    }
+        const user = await db.collection('users').findOne({email})
+
+        if(user.email == email && user.password == password){
+            return res.json({
+                message : "true",
+                userName : user.username,
+                email : user.email
+            })
+        }
+        else{
+            return res.json({message : "false"})
+        }
+        
+    
 });
 
 

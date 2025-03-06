@@ -9,6 +9,10 @@
   border-bottom: 1px solid black;
 }
 
+.navbar > .logo{
+  color: green;
+}
+
 nav > ul{
   display: flex;
   list-style-type: none;
@@ -41,6 +45,11 @@ nav > ul > li:hover{
 }
 .nav-button:hover{
   color: white;
+}
+
+.user-info > span > p{
+  font-size: larger;
+  font-weight: bold;
 }
 
 .btn-login{

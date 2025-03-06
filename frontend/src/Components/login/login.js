@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./login.css"; // Import CSS file
 
 function Login() {
 
     const [email, setEmail ] = useState("");
     const [password, setPassword ] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
 
@@ -16,12 +17,21 @@ function Login() {
         try{
             const response = await fetch("http://localhost:5000/loginUser", {
                 method: "POST",
-                headers: {"content-Type" : "application/json"},
+                headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify(userData)
             });
 
             const data = await response.json();
-            console.log(data.message)
+            
+            if(data.message === "true" ){
+                sessionStorage.setItem("userName", data.userName);
+                sessionStorage.setItem("userEmail", data.email);
+                navigate("/")
+            }
+            else if (data.message === "false"){
+                document.getElementsByClassName("login-action").innerHTML = "User Not Found";
+            }
+
 
         }catch(err){
             console.log("Error")
@@ -31,13 +41,15 @@ function Login() {
 
   return (
     
-    <div class="login-container">
+    <div className="login-container">
 
-        <div className="login=box">
+        <div className="login-box">
 
             <h2>Login</h2>
 
             <form onSubmit={handleSubmit}>
+
+                <p className="login-action"></p>
 
                 <div className="input-group">
                     <label>Email</label><br></br>
