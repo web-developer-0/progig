@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { React, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css"; // Import CSS file
 
@@ -8,7 +8,7 @@ function Login() {
     const [password, setPassword ] = useState("");
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleLoginSubmit = async (e) => {
 
         e.preventDefault();
 
@@ -26,7 +26,7 @@ function Login() {
             if(data.message === "true" ){
                 sessionStorage.setItem("userName", data.userName);
                 sessionStorage.setItem("userEmail", data.email);
-                navigate("/")
+                navigate("/");
             }
             else if (data.message === "false"){
                 document.getElementsByClassName("login-action").innerHTML = "User Not Found";
@@ -45,14 +45,14 @@ function Login() {
 
         <div className="login-box">
 
-            <h2>Login</h2>
+            <h1>Login</h1>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleLoginSubmit}>
 
                 <p className="login-action"></p>
 
                 <div className="input-group">
-                    <label>Email</label><br></br>
+                    
                     <input 
                         type="email" 
                         placeholder="Enter your email" 
@@ -63,7 +63,7 @@ function Login() {
 
 
                 <div className="input-group">
-                    <label>Password</label><br></br>
+                    
                     <input 
                         type="password" 
                         placeholder="Enter your Password" 

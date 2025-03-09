@@ -82,29 +82,28 @@ function ContactPage() {
 
         <span class="contact-header">How to Reach Us</span>
 
-        <span className="contact-content">
-        📍 Address: [Your Office Location or "Remote-Based Platform"]
-        📞 Phone: [Your Contact Number]
-        ✉ Email: [Your Support Email]
-        🌍 Website: [Your Website URL]
+        <span className="contact-content-pt">
+        📍 Address: 14, West Street, Virudhunagar - 626001.<br/>
+        📞 Phone: +91 1234567890<br/>
+        ✉ Email: manoj@example.com<br/>
         </span>
 
         <span class="contact-header">Support & Assistance</span>
 
-        <span className="contact-content">
-        💬 Live Chat: Available 24/7 for quick support.
-        📩 Help Desk: Submit a ticket, and our team will get back to you.
-        🔗 FAQs: Find answers to common questions in our [FAQ section].
+        <span className="contact-content-pt">
+        💬 Live Chat: Available 24/7 for quick support.<br/>
+        📩 Help Desk: Submit a ticket, and our team will get back to you.<br/>
+        🔗 FAQs: Find answers to common questions in our [FAQ section].<br/>
         </span>
 
         <span class="contact-header">Follow Us</span>
 
-        <span className="contact-content">
+        <span className="contact-content-pt">
         Stay connected with us on social media for the latest updates:
-        🔹 Facebook: [Your Facebook Link]
-        🔹 Twitter/X: [Your Twitter Link]
-        🔹 LinkedIn: [Your LinkedIn Link]
-        🔹 Instagram: [Your Instagram Link]
+        🔹 Facebook: [Your Facebook Link]<br/>
+        🔹 Twitter/X: [Your Twitter Link]<br/>
+        🔹 LinkedIn: [Your LinkedIn Link]<br/>
+        🔹 Instagram: [Your Instagram Link]<br/>
         </span>
 
         <span class="contact-header">Send Us a Message</span>
