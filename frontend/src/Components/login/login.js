@@ -23,13 +23,18 @@ function Login() {
 
             const data = await response.json();
             
-            if(data.message === "true" ){
+            if(data.message === "UNF"){
+                document.getElementsByClassName("login-action").style.display = "block";
+                document.getElementsByClassName("login-action").innerHTML = "<p>User Not Found</p>";
+            }
+            else if(data.message === "true" ){
                 sessionStorage.setItem("userName", data.userName);
                 sessionStorage.setItem("userEmail", data.email);
                 navigate("/");
             }
             else if (data.message === "false"){
-                document.getElementsByClassName("login-action").innerHTML = "User Not Found";
+                document.getElementsByClassName("login-action").style.display = "block";
+                document.getElementsByClassName("login-action").innerHTML = "<p>Email or Password in Incorrect</p>";
             }
 
 
@@ -47,9 +52,9 @@ function Login() {
 
             <h1>Login</h1>
 
-            <form onSubmit={handleLoginSubmit}>
+            <div className="login-action"></div>
 
-                <p className="login-action"></p>
+            <form onSubmit={handleLoginSubmit}>
 
                 <div className="input-group">
                     

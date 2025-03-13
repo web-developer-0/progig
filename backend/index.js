@@ -21,17 +21,24 @@ MongoClient.connect(uri).then((client)=>{
 app.post("/loginUser", async(req, res) => {
     const {email, password } = req.body;
 
-        const user = await db.collection('users').findOne({email})
+        const user = await db.collection('Buyers').findOne({email})
 
-        if(user.email == email && user.password == password){
-            return res.json({
-                message : "true",
-                userName : user.username,
-                email : user.email
-            })
+        if(user == null){
+            return res.json({message : "UNF"})
         }
         else{
-            return res.json({message : "false"})
+
+            if(user.email == email && user.password == password){
+                return res.json({
+                    message : "true",
+                    userName : user.username,
+                    email : user.email
+                })
+            }
+            else{
+                return res.json({message : "false"})
+            }
+
         }
         
     
