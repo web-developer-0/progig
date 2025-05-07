@@ -1,0 +1,27 @@
+.contact-container {
+    margin: 5% 10% 10% 10%;
+  }
+  
+  .contact-header,
+  .contact-content,
+  .contact-content-pt {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .contact-header {
+    font-size: larger;
+    font-weight: bolder;
+  }
+  
+  .contact-content {
+    font-size: large;
+    text-indent: 4ch;
+    margin-bottom: 20px;
+  }
+  
+  .contact-content-pt {
+    font-size: large;
+    margin-bottom: 30px;
+  }
+  
