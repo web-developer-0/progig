@@ -66,8 +66,7 @@ app.post("/CreateGig", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post('/UpdateGig', async(req, res) => {
-
+app.post("/UpdateGig", async (req, res) => {
   try {
     const { username, email, title, category, duration, price, description } =
       req.body;
@@ -85,12 +84,11 @@ app.post('/UpdateGig', async(req, res) => {
       updatedAt: new Date(),
     });
 
-    res.json({ message: "success"});
+    res.json({ message: "success" });
   } catch (error) {
     console.error("Error saving gig:", error);
     res.status(500).json({ message: "error" });
   }
-
 });
 
 app.post("/yourGigs", async (req, res) => {
@@ -102,6 +100,109 @@ app.post("/yourGigs", async (req, res) => {
     .toArray();
 
   res.json(result);
+});
+
+app.post("/OrderedGigs", async (req, res) => {
+  const { username } = req.body;
+
+  const orderedGigsData = await db
+    .collection("orderedGigs")
+    .find({ gig_creator: username })
+    .toArray();
+
+  const gigIds = orderedGigsData.map((item) => new ObjectId(item.gig_id));
+
+  const gigsData = await db
+    .collection("gigs")
+    .find({ _id: { $in: gigIds } }, { projection: { duration: 1, _id: 1 } })
+    .toArray();
+
+  const enrichedData = orderedGigsData.map((orderedGig) => {
+    const gig = gigsData.find((g) => g._id.equals(orderedGig.gig_id));
+    return {
+      ...orderedGig,
+      duration: gig ? gig.duration : null,
+    };
+  });
+
+  res.json(enrichedData);
+});
+
+app.post("/GetOrderedGigRequirements", async (req, res) => {
+  const { gig_Id } = req.body;
+
+  const data = await db
+    .collection("orderedGigs")
+    .find({ _id: new ObjectId(gig_Id) })
+    .toArray();
+
+  res.json(data);
+});
+
+app.get("/downloadFile", (req, res) => {
+  const filePath = req.query.filePath;
+
+  if (!filePath) {
+    return res.status(400).json({ error: "No file path provided" });
+  }
+
+  const fullPath = path.join(__dirname, filePath);
+
+  res.download(fullPath, (err) => {
+    if (err) {
+      console.error("Download error:", err);
+      res.status(500).json({ error: "File could not be downloaded" });
+    }
+  });
+});
+
+const projectStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/projects");
+  },
+  filename: function (req, file, cb) {
+    const { username, email, gig_title, gig_ordered_by } = req.body;
+    const safeUsername = username.replace(/[^a-zA-Z0-9]/g, "_");
+    const safeEmail = email.replace(/[^a-zA-Z0-9]/g, "_");
+    const safeTitle = gig_title.replace(/[^a-zA-Z0-9]/g, "_");
+    const safeOrderBy = gig_ordered_by.replace(/[^a-zA-Z0-9]/g, "_");
+    const ext = path.extname(file.originalname);
+    cb(null, `${safeUsername}_${safeEmail}_${safeTitle}_${safeOrderBy}${ext}`);
+  },
+});
+
+const uploadProject = multer({ storage: projectStorage });
+
+app.post("/StoreProject", uploadProject.single("zipfile"), async (req, res) => {
+  const {
+    username,
+    email,
+    gig_title,
+    gig_category,
+    orderedGigId,
+    project_description,
+  } = req.body;
+  const projectPath = req.file ? `uploads/projects/${req.file.filename}` : null;
+
+  try {
+    const result = await db.collection("CompletedProjects").insertOne({
+      username,
+      email,
+      gig_title,
+      gig_category,
+      orderedGigId,
+      project_description,
+      zipfile: projectPath,
+      createdAt: new Date(),
+    });
+
+    if (result) {
+      res.json({ message: "success" });
+    }
+  } catch (error) {
+    console.error("Error saving gig:", error);
+    res.status(500).json({ message: "error" });
+  }
 });
 
 app.post("/allGigs", async (req, res) => {
@@ -128,13 +229,12 @@ app.post("/AddToCart", async (req, res) => {
     .collection("cartGigs")
     .find({ username, email, gig_id });
 
-  if (result.length > 0 ) {
-
-    res.json({message : true});
+  if (result.length > 0) {
+    res.json({ message: true });
   } else {
     const data = await db
       .collection("cartGigs")
-      .insertOne({ username, email, gigId : gig_id });
+      .insertOne({ username, email, gigId: gig_id });
 
     if (data) {
       res.json({ message: true });
@@ -142,27 +242,33 @@ app.post("/AddToCart", async (req, res) => {
   }
 });
 
-app.post("/RemoveCartGigs", async (req,res) => {
+app.post("/RemoveCartGigs", async (req, res) => {
+  const { username, email, gig_id } = req.body;
 
-  const {username, email, gig_id} = req.body;
+  const data = await db
+    .collection("cartGigs")
+    .deleteOne({ username, email, gigId: gig_id });
 
-  const data = await db.collection("cartGigs").deleteOne({username, email, gigId : gig_id});
-
-  if(data.deletedCount > 0){
-    res.json({message : true});
+  if (data.deletedCount > 0) {
+    res.json({ message: true });
   }
-
 });
 
 app.post("/getCartGigs", async (req, res) => {
   const { username, email } = req.body;
 
   try {
-    const cartItems = await db.collection("cartGigs").find({ username, email }).toArray();
+    const cartItems = await db
+      .collection("cartGigs")
+      .find({ username, email })
+      .toArray();
 
-    const gigIds = cartItems.map(item => item.gigId); 
+    const gigIds = cartItems.map((item) => item.gigId);
 
-    const gigs = await db.collection("gigs").find({ _id: { $in: gigIds.map(id => new ObjectId(id)) } }).toArray();
+    const gigs = await db
+      .collection("gigs")
+      .find({ _id: { $in: gigIds.map((id) => new ObjectId(id)) } })
+      .toArray();
 
     res.json(gigs);
   } catch (error) {
@@ -188,39 +294,52 @@ const orderStorage = multer.diskStorage({
 
 const orderUpload = multer({ storage: orderStorage });
 
-app.post("/OrderCartGigs", orderUpload.single("users_zipFile"), async (req, res) => {
-  try {
-    const { username, email, gig_id, gig_title, gig_creator, users_description } = req.body;
-    const filePath = req.file ? `/uploads/zipfiles/${req.file.filename}` : null;
+app.post(
+  "/OrderCartGigs",
+  orderUpload.single("users_zipFile"),
+  async (req, res) => {
+    try {
+      const {
+        username,
+        email,
+        gig_id,
+        gig_title,
+        gig_creator,
+        users_description,
+      } = req.body;
+      const filePath = req.file
+        ? `/uploads/zipfiles/${req.file.filename}`
+        : null;
 
-    const result = await db.collection("orderedGigs").insertOne({
-      username,
-      email,
-      gig_id,
-      gig_title,
-      gig_creator,
-      users_description,
-      filePath,
-      orderedAt: new Date(),
-    });
+      const result = await db.collection("orderedGigs").insertOne({
+        username,
+        email,
+        gig_id,
+        gig_title,
+        gig_creator,
+        users_description,
+        filePath,
+        orderedAt: new Date(),
+      });
 
-    res.json({ message: true });
-  } catch (error) {
-    console.error("Error placing order:", error);
-    res.status(500).json({ message: false });
+      res.json({ message: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+      res.status(500).json({ message: false });
+    }
   }
-});
+);
 
-app.post("/GetOrderedDetails", async(req, res) => {
+app.post("/GetOrderedDetails", async (req, res) => {
+  const { username, email } = req.body;
 
-  const {username, email} = req.body;
-
-  const data = await db.collection("orderedGigs").find({username, email}).toArray();
+  const data = await db
+    .collection("orderedGigs")
+    .find({ username, email })
+    .toArray();
 
   res.json(data);
-
-})
-
+});
 
 app.post("/loginUser", async (req, res) => {
   const { email, password } = req.body;
@@ -242,37 +361,49 @@ app.post("/loginUser", async (req, res) => {
   }
 });
 
+app.post("/loginAdmin", async (req, res) => {
+  const { userName, password } = req.body;
+
+  const user = await db.collection("Admin").findOne({ username: userName });
+
+  if (user == null) {
+    return res.json({ message: "UNF" });
+  } else {
+    if (user.username == userName && user.password == password) {
+      return res.json({
+        message: "true",
+        userName: user.username,
+      });
+    } else {
+      return res.json({ message: "false" });
+    }
+  }
+});
+
 app.post("/signUp", async (req, res) => {
   const { name, email, userName, password } = req.body;
 
   const user = await db.collection("Buyer").findOne({ email });
 
-  if (user  == null) {
+  if (user == null) {
+    const user1 = await db.collection("Buyer").findOne({ userName });
 
-    const user1 = await db.collection("Buyer").findOne({userName});
-
-    if (user1 == null){
-
+    if (user1 == null) {
       const insert = await db.collection("Buyer").insertOne({
         name: name,
         email: email,
         username: userName,
         password: password,
       });
-  
+
       if (insert) {
         return res.json({ message: "true" });
       }
-
-    }else if(user1.username == userName){
+    } else if (user1.username == userName) {
       return res.json({ message: "userName exist" });
     }
-    
-
-  } else if(user.email == email) {
-
-     return res.json({ message: "user exist" });
-
+  } else if (user.email == email) {
+    return res.json({ message: "user exist" });
   }
 });
 
@@ -284,7 +415,7 @@ app.post("/BuyerDetails", async (req, res) => {
   if (det.email == email) {
     const data = await db.collection("gigs").find({ email }).toArray();
 
-    const data1 = await db.collection("orderedGigs").find({email}).toArray();
+    const data1 = await db.collection("orderedGigs").find({ email }).toArray();
 
     return res.json({
       message: true,
@@ -300,6 +431,51 @@ app.post("/BuyerDetails", async (req, res) => {
     res.json({ message: false });
   }
 });
+
+app.post("/admin/UsersList", async (req, res) => {
+  const result = await db
+    .collection("Buyer")
+    .aggregate([
+      {
+        $lookup: {
+          from: "gigs", 
+          localField: "username", 
+          foreignField: "username",
+          as: "user_gigs",
+        },
+      },
+      {
+        $project: {
+          _id: 0, 
+          username: 1,
+          email: 1, 
+          name: 1, 
+          gigCount: { $size: "$user_gigs" },
+        },
+      },
+    ])
+    .toArray();
+
+
+  res.json(result);
+});
+
+app.post("/admin/GigsList", async(req,res)=>{
+  const result = await db.collection("gigs").find({}).toArray();
+  res.json(result);
+
+})
+
+app.post("/admin/GetCounts", async(req,res)=>{
+  const [gigCount, userCount] = await Promise.all(
+    [
+      db.collection("gigs").countDocuments(),
+      db.collection("Buyer").countDocuments()
+    ]
+  )
+
+  res.json({gigCount: gigCount, userCount: userCount});
+})
 
 app.listen(5000, () => {
   console.log("Server running on Port 5000");

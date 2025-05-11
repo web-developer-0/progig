@@ -100,6 +100,7 @@ function BuyerCart() {
       formData.append("email", email);
       formData.append("gig_id", selectedGig._id);
       formData.append("gig_title", selectedGig.title);
+      formData.append("gig_category", selectedGig.category);
       formData.append("gig_creator", selectedGig.username);
       formData.append("users_description", orderDetails.description);
       formData.append("users_zipFile", orderDetails.zipFile); 
@@ -159,7 +160,7 @@ function BuyerCart() {
               Orders
             </Nav.Link>
           </Nav>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center me-5">
             {user ? (
               <Dropdown className="me-5">
                 <Dropdown.Toggle

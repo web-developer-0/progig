@@ -48,7 +48,7 @@ function YourGigs() {
 
       const data = await response.json();
       setYourGig(data);
-      console.log("Fetched gigs:", data);
+      
     } catch (err) {
       console.log(err);
     }
@@ -98,8 +98,15 @@ function YourGigs() {
             >
               Your Gigs
             </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/seller/orders"
+              className="nav-link fs-5 mx-3"
+            >
+              Orders
+            </Nav.Link>
           </Nav>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center me-5">
             {user && (
               <Dropdown className="me-5">
                 <Dropdown.Toggle

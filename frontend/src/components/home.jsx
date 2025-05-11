@@ -83,7 +83,7 @@ function Home() {
               Contact Us
             </Nav.Link>
           </Nav>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center me-5">
             {user ? (
               <Dropdown className="me-5">
                 <Dropdown.Toggle

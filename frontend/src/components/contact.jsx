@@ -39,28 +39,29 @@ function ContactPage() {
               Contact Us
             </Nav.Link>
           </Nav>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center me-5">
             {user ? (
-              
               <Dropdown className="me-5">
-                      
-                      <Dropdown.Toggle
-                        variant="link"
-                        className="text-success fw-bold fs-5 p-0 m-0"
-                        id="dropdown-basic"
-                        style={{ textDecoration: 'none' }}
-                        >
-                        {user} 
-                      </Dropdown.Toggle>
+                <Dropdown.Toggle
+                  variant="link"
+                  className="text-success fw-bold fs-5 p-0 m-0"
+                  id="dropdown-basic"
+                  style={{ textDecoration: "none" }}
+                >
+                  {user}
+                </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item as={Link} to="/buyer/profile">Profile</Dropdown.Item>
-                        <Dropdown.Item as={Link} to="/profile">Become a Seller</Dropdown.Item>
-                        <Dropdown.Divider />
-                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/buyer/profile">
+                    Buyer Profile
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/seller/profile">
+                    Seller Profile
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
               <>
                 <Link to="/login">

@@ -106,7 +106,7 @@ function BuyerOrder() {
               Orders
             </Nav.Link>
           </Nav>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center me-5">
             {user ? (
               <Dropdown className="me-5">
                 <Dropdown.Toggle
@@ -152,7 +152,7 @@ function BuyerOrder() {
                 <tr key={gig._id || index}>
                   <td>{index + 1}</td>
                   <td>
-                    <Link to={"/gigDetails"}> {gig.gig_title} </Link>
+                    {gig.gig_title}
                   </td>
                   <td>{new Date(gig.orderedAt).toLocaleDateString()}</td>
                   <td>{gig.gig_creator}</td>

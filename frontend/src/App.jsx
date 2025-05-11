@@ -17,7 +17,14 @@ import BuyerOrders from "./buyer/order";
 import SellerProfile from "./seller/profile";
 import CreateGig from "./seller/createGig";
 import YourGigs from "./seller/yourGigs";
-import EditGig from "./seller/editGig"
+import EditGig from "./seller/editGig";
+import Orders from "./seller/orders";
+import OrderedGigsRequirements from "./seller/orderedGigsRequirements";
+
+import AdminLogin from "./admin/adminLogin";
+import AdminDashboard from "./admin/adminDashboard";
+import Users from "./admin/userList";
+import Gigs from "./admin/gigsList";
 
 
 function App() {
@@ -40,6 +47,13 @@ function App() {
         <Route path="/seller/createGig" element={<CreateGig/>} />
         <Route path="/seller/yourGigs" element={<YourGigs/>} />
         <Route path="/seller/yourGigs/editGig" element={<EditGig/>} />
+        <Route path="/seller/orders" element={<Orders/>} />
+        <Route path="/seller/orders/orderedGigsRequirements" element={<OrderedGigsRequirements/>} />
+
+        <Route path="/admin/adminLogin" element={<AdminLogin/>} />
+        <Route path="/admin/adminDashboard" element={<AdminDashboard/>} />
+        <Route path="/admin/usersList" element={<Users/>} />
+        <Route path="/admin/gigsList" element={<Gigs/>} />
  
       </Routes>
     </Router>
