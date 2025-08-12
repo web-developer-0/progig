@@ -42,7 +42,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 async function startServer() {
   try {
@@ -522,7 +522,3 @@ app.post("/admin/GetCounts", async(req,res)=>{
 
   res.json({gigCount: gigCount, userCount: userCount});
 })
-
-app.listen(5000, () => {
-  console.log("Server running on Port 5000");
-});
