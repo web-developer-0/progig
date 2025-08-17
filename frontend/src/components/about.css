@@ -1,0 +1,26 @@
+.about-container {
+    margin-top: 5%;
+    margin-bottom: 10%;
+  }
+  
+  .body-header, .body-content, .body-content-pt {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .body-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .body-content {
+    font-size: 1.1rem;
+    text-indent: 4ch;
+    margin-bottom: 20px;
+  }
+  
+  .body-content-pt {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+  
