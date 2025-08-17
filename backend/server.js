@@ -56,7 +56,7 @@ async function startServer() {
     console.log("✅ Ping to MongoDB Atlas successful");
 
     // Make DB available to routes
-    app.locals.db = client.db("progig");
+    db = client.db("progig");
 
     app.get('/', (req, res) => {
       res.send('Backend is live 🚀');
